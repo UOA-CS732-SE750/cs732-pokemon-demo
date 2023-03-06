@@ -1,0 +1,41 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    background-color: aliceblue;
+}
+
+.container:not(.nicknamed):hover {
+    background-color: lightblue;
+}
+
+.container.nicknamed {
+    background-color: lightgreen;
+}
+
+.container.nicknamed:hover {
+    background-color: lime;
+}
+
+.container > img {
+    align-self: center;
+}
+
+.container.nicknamed > img {
+    cursor: not-allowed;
+}
+
+.container > input {
+    padding: 5px;
+    margin: 0;
+    text-align: center;
+    font-size: 12pt;
+    color: white;
+    font-weight: bold;
+    background-color: black;
+    border: 0;
+}
+
+.container > input:focus {
+    color: black;
+    background-color: white;
+}

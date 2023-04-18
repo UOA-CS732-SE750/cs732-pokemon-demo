@@ -1,14 +1,17 @@
-import { useState } from "react";
 import PokemonTile from "./PokemonTile";
 import styles from './PokemonBox.module.css';
+import { AppContext } from "./AppContextProvider";
+import { useContext } from "react";
 
-function PokemonBox({ pokemonArray, onRemovePokemon, onChangeNickname }) {
+function PokemonBox() {
+
+    const { allPokemon } = useContext(AppContext);
 
     return (
         <div className={styles.container}>
 
-            {pokemonArray.map((pokemon) => (
-                <PokemonTile onChangeNickname={onChangeNickname} onRemovePokemon={onRemovePokemon} key={pokemon.id} pokemon={pokemon} />
+            {allPokemon.map((pokemon) => (
+                <PokemonTile key={pokemon.id} pokemon={pokemon} />
             ))}
 
         </div>

@@ -1,10 +1,8 @@
 import axios from 'axios';
 import express from 'express';
-import { v4 as uuid } from 'uuid';
+import { Pokemon } from '../../db/pokemon-schema';
 
 const router = express.Router();
-
-const allPokemon = [];
 
 // Create a pokemon with the given species, and sends it back in the given response.
 async function createPokemon(species, res) {
@@ -12,17 +10,16 @@ async function createPokemon(species, res) {
     try {
         const response = await axios.get(url);
 
-        const pokemon = {
-            id: uuid(),
+        const pokemon = new Pokemon({
             species: parseInt(species),
             originalName: response.data.name,
             name: response.data.name,
             image: response.data.sprites.front_default
-        }
+        });
 
-        allPokemon.push(pokemon);
+        await pokemon.save();
 
-        res.status(201).location(`/api/pokemon/${pokemon.id}`).json(pokemon);
+        res.status(201).location(`/api/pokemon/${pokemon._id}`).json(pokemon);
     }
     catch (err) {
         return res.sendStatus(422);
@@ -50,10 +47,10 @@ router.post('/random', (req, res) => {
 });
 
 // Read single Pokemon
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
     const { id } = req.params;
 
-    const pokemon = allPokemon.find(p => p.id === id);
+    const pokemon = await Pokemon.findById(id);
 
     if (!pokemon) return res.sendStatus(404);
 
@@ -61,32 +58,28 @@ router.get('/:id', (req, res) => {
 });
 
 // Read list of all Pokemon
-router.get('/', (req, res) => {
-    res.json(allPokemon);
+router.get('/', async (req, res) => {
+    res.json(await Pokemon.find());
 });
 
 // Update Pokemon
-router.patch('/:id', (req, res) => {
+router.patch('/:id', async (req, res) => {
     const { id } = req.params;
-    const pokemon = allPokemon.find(p => p.id === id);
-
-    if (!pokemon) return res.sendStatus(404);
-
     const { name } = req.body;
     if (!name) return res.sendStatus(422);
 
-    pokemon.name = name;
+    const pokemon = await Pokemon.findOneAndUpdate({ _id: id }, { name });
+
+    if (!pokemon) return res.sendStatus(404);
+
     res.sendStatus(204);
 });
 
 // Delete Pokemon
 // Update Pokemon
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
     const { id } = req.params;
-    const index = allPokemon.findIndex(p => p.id === id);
-    if (index >= 0) {
-        allPokemon.splice(index, 1);
-    }
+    await Pokemon.deleteOne({ _id: id });
 
     res.sendStatus(204);
 });

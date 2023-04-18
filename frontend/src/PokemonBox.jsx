@@ -11,7 +11,7 @@ function PokemonBox() {
         <div className={styles.container}>
 
             {allPokemon.map((pokemon) => (
-                <PokemonTile key={pokemon.id} pokemon={pokemon} />
+                <PokemonTile key={pokemon._id} pokemon={pokemon} />
             ))}
 
         </div>

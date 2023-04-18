@@ -13,7 +13,7 @@ export default function PokemonTile({ pokemon }) {
     useEffect(() => {
         const timer = setTimeout(() => {
             if (pokemon.name === newNickname) return;
-            renamePokemon(pokemon.id, newNickname);
+            renamePokemon(pokemon._id, newNickname);
         }, 200);
 
         return () => clearTimeout(timer);
@@ -21,7 +21,7 @@ export default function PokemonTile({ pokemon }) {
 
     function handleReleasePokemon() {
         if (hasNickname) return;
-        releasePokemon(pokemon.id);
+        releasePokemon(pokemon._id);
     }
 
     return (

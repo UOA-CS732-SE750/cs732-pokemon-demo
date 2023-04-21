@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const pokemonSchema = new Schema({
     species: Number,
     originalName: String,
-    name: String,
+    name: { type: String, required: true },
     image: String
 });
 
